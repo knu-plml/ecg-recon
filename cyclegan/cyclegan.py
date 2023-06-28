@@ -15,20 +15,18 @@ def load_generator():
 
     initializer : for each layer, randomly select from (mean = 0, stdev = 0.02)
     encoder_inputs : input of the generator
-    number_of_filter_encoder : the numbers of filters of encoder in the generator
-    number_of_filter_decoder : the numbers of filters of decoder in the generator
+    number_of_filter_encoder : the number of filters of encoder in the encoder
+    number_of_filter_decoder : the number of filters of decoder in the decoder
     kernel : kernel
     stride : stride
     '''
     encoder_inputs = keras.Input(shape=(16, 512, 1), name='generated_generator')
-
 
     number_of_filter_encoder = [64, 128, 256, 512, 1024]
     number_of_filter_decoder = [512, 256, 128, 64, 1]
     kernel = (2, 4)
     stride = [2, 2, 2, 2, (1, 2)]
     concatenate_encoder_block = []
-
 
     b_conv = tf.keras.layers.Conv2D(64, kernel, strides=stride[0], padding='same', kernel_initializer=initializer, use_bias=False)(encoder_inputs)
     b_output = tf.keras.layers.Activation('LeakyReLU')(b_conv)
@@ -55,7 +53,6 @@ def load_generator():
 
     b_concat = tf.keras.layers.Concatenate()([b_output, concatenate_encoder_block[-4]])
     encoder_outputs = layers.Conv2DTranspose(1, (2, 4), strides=(2), padding="same", kernel_initializer=initializer, use_bias=False)(b_concat)
-
     return tf.keras.Model(inputs=[encoder_inputs], outputs=encoder_outputs)
 
 
@@ -91,7 +88,7 @@ def load_discriminator():
 
 
 def train_step(input_image, target, generator, discriminator, generator_optimizer, discriminator_optimizer,
-               s, generator2, generator2_optimizer, discriminator2, discriminator2_optimizer):
+               epoch, generator2, generator2_optimizer, discriminator2, discriminator2_optimizer):
     with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape, tf.GradientTape() as gedisc_tape, tf.GradientTape() as disc2_tape:
         fake_y = generator(input_image, training=True)
         cycled_x = generator2(fake_y, training=True)
@@ -139,5 +136,5 @@ def train_step(input_image, target, generator, discriminator, generator_optimize
                                              generator2.trainable_variables))
     discriminator2_optimizer.apply_gradients(zip(discriminator2_gradients,
                                                  discriminator2.trainable_variables))
-    print('epoch {} total_gen_loss {} gen_loss {} total_cycle_loss {}'.format(s, total_gen_loss, gen_loss, total_cycle_loss))
+    print('epoch {} total_gen_loss {} gen_loss {} total_cycle_loss {}'.format(epoch, total_gen_loss, gen_loss, total_cycle_loss))
 

@@ -1,12 +1,6 @@
 import tensorflow as tf
 import keras
-from tensorflow.keras import layers
 from loss import *
-import numpy as np
-from biosppy.signals import tools as tools
-from scipy import stats
-import sklearn.preprocessing as skp
-from scipy import signal
 from layers import *
 initializer = tf.random_normal_initializer(0., 0.02)
 
@@ -22,9 +16,9 @@ def load_generator():
 
     initializer : for each layer, randomly select from (mean = 0, stdev = 0.02)
     inputs : input of the generator
-    filter size : the numbers of filters of the encoder in the generator
+    filter size : the number of filters in the encoder and decoder
     '''
-    
+
     filter_size = [64, 128, 256, 512, 512, 512]
     kernel_size = [16, 16, 16, 16, 16, 16]
     n_downsample = 6
@@ -51,7 +45,6 @@ def load_generator():
         h = keras.layers.add([h, _h])
 
     for l in range(1, n_downsample):
-        print(l, "qq")
         if l <= 3:
             h = upsample_st1(h, filter_size[k-l], kernel_size[k-l], norm)
             if skip_connection:
@@ -93,7 +86,9 @@ def load_time_discriminator():
 
 
 def load_frequency_discriminator():
+    
     ''' frequency domain discriminator '''
+
     inp = tf.keras.layers.Input(shape=[128, 128, 12], name='input_image')
     x = tf.keras.layers.Conv2D(64, (7, 7), strides=2, kernel_initializer=initializer, padding='same', use_bias=False)(inp)
     x = tf.keras.layers.LeakyReLU()(x)

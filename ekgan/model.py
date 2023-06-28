@@ -6,40 +6,39 @@ from loss import *
 initializer = tf.random_normal_initializer(0., 0.02)
 time_len = 512
 
-def train_step(input_image, target, epoch,inference_generator,discriminator,inference_generator_optimizer,discriminator_optimizer,s,label_generator,label_generator_optimizer,lambda_,alpha):
-  with tf.GradientTape() as ig_tape, tf.GradientTape() as disc_tape, tf.GradientTape() as lg_tape:
-    ig_output,ig_lv = inference_generator(input_image, training=True)
-  
-    lg_output,lg_lv = label_generator([input_image],training=True)
+def train_step(input_image, target, inference_generator,discriminator,inference_generator_optimizer,discriminator_optimizer,epoch,label_generator,label_generator_optimizer,lambda_,alpha):
+    with tf.GradientTape() as ig_tape, tf.GradientTape() as disc_tape, tf.GradientTape() as lg_tape:
 
-    disc_real_output = discriminator([input_image,target], training=True)
-    disc_generated_output = discriminator([input_image,ig_output], training=True)
-    
-    
-    total_lg_loss,lg_l1_loss = label_generator_loss(lg_output,input_image)
-    
-    total_ig_loss, ig_adversarial_loss, ig_l1_loss,vector_loss  = inference_generator_loss(disc_generated_output, ig_output, target,lambda_,ig_lv,lg_lv,alpha)
-    disc_loss = discriminator_loss(disc_real_output, disc_generated_output)
+        ig_output,ig_lv = inference_generator(input_image, training=True)
+        lg_output,lg_lv = label_generator([input_image],training=True)
 
-  inference_generator_gradients = ig_tape.gradient(total_ig_loss,
-                                          inference_generator.trainable_variables)
-  discriminator_gradients = disc_tape.gradient(disc_loss,
-                                               discriminator.trainable_variables)
-  label_generator_gradients = lg_tape.gradient(total_lg_loss,
-                                               label_generator.trainable_variables)
+        disc_real_output = discriminator([input_image,target], training=True)
+        disc_generated_output = discriminator([input_image,ig_output], training=True)
 
-  inference_generator_optimizer.apply_gradients(zip(inference_generator_gradients,
-                                          inference_generator.trainable_variables))
-  discriminator_optimizer.apply_gradients(zip(discriminator_gradients,
-                                              discriminator.trainable_variables))
-  label_generator_optimizer.apply_gradients(zip(label_generator_gradients,
-                                              label_generator.trainable_variables))
+        total_lg_loss,lg_l1_loss = label_generator_loss(lg_output,input_image)
 
-  print('epoch {} gen_total_loss {} ig_adversarial_loss {} ig_l1_loss {} lg_l2_loss {} vector_loss {}  '.format(s,total_ig_loss,ig_adversarial_loss,ig_l1_loss,lg_l1_loss,vector_loss))
+        total_ig_loss, ig_adversarial_loss, ig_l1_loss,vector_loss  = inference_generator_loss(disc_generated_output, ig_output, target,lambda_,ig_lv,lg_lv,alpha)
+        disc_loss = discriminator_loss(disc_real_output, disc_generated_output)
+
+    inference_generator_gradients = ig_tape.gradient(total_ig_loss,
+                                            inference_generator.trainable_variables)
+    discriminator_gradients = disc_tape.gradient(disc_loss,
+                                                 discriminator.trainable_variables)
+    label_generator_gradients = lg_tape.gradient(total_lg_loss,
+                                                 label_generator.trainable_variables)
+
+    inference_generator_optimizer.apply_gradients(zip(inference_generator_gradients,
+                                            inference_generator.trainable_variables))
+    discriminator_optimizer.apply_gradients(zip(discriminator_gradients,
+                                                discriminator.trainable_variables))
+    label_generator_optimizer.apply_gradients(zip(label_generator_gradients,
+                                                label_generator.trainable_variables))
+
+    print('epoch {} gen_total_loss {} ig_adversarial_loss {} ig_l1_loss {} lg_l2_loss {} vector_loss {}  '.format(epoch,total_ig_loss,ig_adversarial_loss,ig_l1_loss,lg_l1_loss,vector_loss))
 
 
 def load_inference_generator():
-    
+
     filters_encoder = [64,128,256,512,1024]
     filters_decoder = [512,256,128,64,1]
     kernel = (2,4)
@@ -73,8 +72,9 @@ def load_inference_generator():
     inference_generator.summary()
     return inference_generator
 
+
 def load_label_generator():
-    
+
     filters_encoder = [64,128,256,512,1024]
     filters_decoder = [512,256,128,64,1]
     kernel = (2,4)
@@ -99,20 +99,20 @@ def load_label_generator():
         x = tf.keras.layers.BatchNormalization()(x)
         x = tf.keras.layers.Activation('relu')(x)
 
-
     lg_outputs = layers.Conv2DTranspose(filters_decoder[4], kernel, stride[-4], padding="same",kernel_initializer=initializer, use_bias=False)(x)
 
     label_generator=keras.Model(inputs=[lg_inputs],outputs=[lg_outputs,lg_lv])
     label_generator.summary()
     return label_generator
 
+
 def load_discriminator():
-    
+
     filters_encoder = [32,64,128,256,512]
     filters_decoder = [256,128,64,32,1]
     kernel = [64,32,16,8,4]
     stride = [4,4,4,2,2]
-    
+
     encoder_inputs=keras.Input(shape=(16,time_len,1),name='dis')
     tar=keras.Input(shape=(16,time_len,1),name='dis_tar')
     x=tf.keras.layers.Concatenate()([encoder_inputs,tar])
@@ -141,44 +141,3 @@ def load_discriminator():
     discriminator = keras.Model(inputs=[encoder_inputs,tar],outputs = [encoder_outputs])
     discriminator.summary()
     return discriminator
-    
-    
-
-def train(train,train_label,lambda_,path,alpha):
-    
-    ''' 
-    train & train_label : dataset
-    lambda_ : hyperparameter for inference generator
-    path : save path
-    alpha : hyperparameter for label generator
-    '''
-    
-    epochs=10   
-    batch_size = 32
-
-    inference_generator = load_inference_generator()
-    label_generator = load_label_generator()
-    discriminator = load_discriminator()
-    
-
-    inference_generator_optimizer = tf.keras.optimizers.Adam(MyLRSchedule(1e-4), beta_1=0.5)
-    label_generator_optimizer = tf.keras.optimizers.Adam(MyLRSchedule(1e-4), beta_1=0.5)
-    discriminator_optimizer = tf.keras.optimizers.Adam(MyLRSchedule(1e-4), beta_1=0.5)
-
-    for epoch in range(epochs):
-      
-      print("Epoch: ", epoch)
-
-      for i in range(int(len(train)/32)-1):
-        tr=train[batch_size*i:batch_size*(i+1)]
-        tr_label=train_label[batch_size*i:batch_size*(i+1)]
-
-        train_step(tr, tr_label, epoch,inference_generator,discriminator,inference_generator_optimizer,discriminator_optimizer,epoch,label_generator,label_generator_optimizer,lambda_,alpha)
-              
-
-      if (epoch + 1) % 1 == 0:
-        inference_generator.save_weights(f'{path}/inference_generator{epoch+1}.h5')
-    
-def ekgan_train(data,data_label,lambda_,path,alpha):
-    train(data,data_label,lambda_,path,alpha)
-   

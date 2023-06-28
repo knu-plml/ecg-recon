@@ -1,38 +1,12 @@
-import numpy as np
-import tensorflow as tf
-from tensorflow import keras
-from tensorflow.keras import layers
-import os
 import tensorflow as tf
 import keras
-import pandas as pd
-import numpy as np
-from tensorflow.keras.layers import Conv2D, Dense, Conv2DTranspose
-from tensorflow.python.keras.models import Model
 from tensorflow.keras import layers
-import matplotlib.pyplot as plt
-import tensorflow.keras.backend as K
-from keras.callbacks import ModelCheckpoint, TensorBoard
-import time
-import tensorflow.keras as tk
-import tensorflow_addons as tfa
-from biosppy.signals import tools as tools
-import neural_structured_learning as nsl
-from scipy import stats
-from biosppy.signals import tools as tools
-import neural_structured_learning as nsl
-from scipy import stats
-import sklearn.preprocessing as skp
-import neural_structured_learning as nsl
-from sklearn.utils import shuffle
-from scipy import signal
 from loss import *
 time_len = 512
 initializer = tf.random_normal_initializer(0., 0.02)
 
 
 def load_generator():
-    
     '''
     generator
     - based on the U-net architecture.
@@ -45,8 +19,8 @@ def load_generator():
 
     initializer : for each layer, randomly select from (mean = 0, stdev = 0.02)
     encoder_inputs : input of the generator
-    number_of_filter_encoder : the numbers of filters of the encoder in the generator
-    number_of_filter_decoder : the numbers of filters of the decoder in the generator
+    number_of_filter_encoder : the number of filters of in the encoder
+    number_of_filter_decoder : the number of filters of in the decoder
     kernel : kernel
     stride : stride
     '''
@@ -58,7 +32,7 @@ def load_generator():
     stride = [2, 2, 2, 2, (1, 2)]
     concatenate_encoder_block = []
 
-    b_conv = tf.keras.layers.Conv2D(64, kernel, strides=stride[0], padding='same', kernel_initializer=initializer, use_bias=False)(encoder_inputs)  # 8
+    b_conv = tf.keras.layers.Conv2D(64, kernel, strides=stride[0], padding='same', kernel_initializer=initializer, use_bias=False)(encoder_inputs)
     b_output = tf.keras.layers.Activation('LeakyReLU')(b_conv)
     concatenate_encoder_block.append(b_output)
 
@@ -104,8 +78,8 @@ def load_discriminator():
     conv = tf.keras.layers.Conv2D(512, (2, 4), strides=(1), kernel_initializer=initializer, padding='same', use_bias=False)(x)
     batchnorm1 = tf.keras.layers.BatchNormalization()(conv)
     leaky_relu = tf.keras.layers.LeakyReLU()(batchnorm1)
-    zero_pad2 = tf.keras.layers.ZeroPadding2D()(leaky_relu)
-    last = tf.keras.layers.Conv2D(1, (2, 4), strides=(1), kernel_initializer=initializer, activation='sigmoid')(zero_pad2)
+    zero_pad = tf.keras.layers.ZeroPadding2D()(leaky_relu)
+    last = tf.keras.layers.Conv2D(1, (2, 4), strides=(1), kernel_initializer=initializer, activation='sigmoid')(zero_pad)
 
     return tf.keras.Model(inputs=[inp, tar], outputs=last)
 
