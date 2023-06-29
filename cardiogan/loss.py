@@ -11,12 +11,12 @@ import librosa
 
 
 def generator_loss(generated):
-    loss_object = tf.keras.losses.BinaryCrossentropy(from_logits=True)
+    loss_object = tf.keras.losses.BinaryCrossentropy(from_logits = True)
     return loss_object(tf.ones_like(generated), generated)
 
 
 def discriminator_loss(real, generated):
-    loss_object = tf.keras.losses.BinaryCrossentropy(from_logits=True)
+    loss_object = tf.keras.losses.BinaryCrossentropy(from_logits = True)
     real_loss = loss_object(tf.ones_like(real), real)
 
     generated_loss = loss_object(tf.zeros_like(generated), generated)
