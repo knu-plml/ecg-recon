@@ -2,7 +2,7 @@ import tensorflow_addons as tfa
 import tensorflow as tf
 import keras
 from tensorflow.keras import layers
-loss_object = tf.keras.losses.BinaryCrossentropy(from_logits=True)
+loss_object = tf.keras.losses.BinaryCrossentropy(from_logits = True)
 
 
 def generator_loss(generated):

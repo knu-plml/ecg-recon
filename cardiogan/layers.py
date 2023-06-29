@@ -49,8 +49,8 @@ def upsample_st1(ip, filter_size, kernel_size, norm, stride_size = 2, drop_rate 
     return ip
 
 
-def Dense(units, activation=None):
-    weights_initializer = tf.random_normal_initializer(mean = 0.0, stddev = 0.02, seed=None)
+def Dense(units, activation = None):
+    weights_initializer = tf.random_normal_initializer(mean = 0.0, stddev = 0.02, seed = None)
     op = tf.keras.layers.Dense(units = units, activation = activation, use_bias = True, kernel_initializer = weights_initializer,
                                bias_initializer = 'zeros', kernel_regularizer = None, bias_regularizer = None, activity_regularizer = None,
                                kernel_constraint = None, bias_constraint = None)

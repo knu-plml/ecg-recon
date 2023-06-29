@@ -39,7 +39,7 @@ def load_generator():
         connections.append(h)
 
     # upsampling
-    h = upsample(h, filter_size[k], kernel_size[k], norm, stride_size=1)
+    h = upsample(h, filter_size[k], kernel_size[k], norm, stride_size = 1)
     if skip_connection:
         _h = attention_block_1d(curr_layer = h, conn_layer = connections[n_downsample-1])
         h = keras.layers.add([h, _h])
@@ -58,7 +58,7 @@ def load_generator():
 
     # output
     h = DeConv2D(filters = 1, kernel_size = kernel_size[k-l], strides = 2, padding = 'same')(h)
-    h = Activation(h, activation='tanh')
+    h = Activation(h, activation = 'tanh')
 
     return keras.Model(inputs = inputs, outputs = h)
 

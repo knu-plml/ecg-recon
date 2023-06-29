@@ -33,7 +33,7 @@ class MyLRSchedule(tf.keras.optimizers.schedules.LearningRateSchedule):
   def __call__(self, step):
     if (step < int(path * 5)) :
       return self.initial_learning_rate
-    elif step % int(path)==0:
+    elif step % int(path) == 0:
       return self.initial_learning_rate * 0.95
     else:
       return self.initial_learning_rate

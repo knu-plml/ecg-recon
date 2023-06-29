@@ -1,6 +1,6 @@
 import tensorflow as tf
 
-loss_object = tf.keras.losses.BinaryCrossentropy(from_logits=True)
+loss_object = tf.keras.losses.BinaryCrossentropy(from_logits = True)
 
 
 def generator_loss(disc_generated_output, gen_output, target, p):
