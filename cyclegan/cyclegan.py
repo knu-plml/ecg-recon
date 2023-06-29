@@ -46,7 +46,6 @@ def load_generator():
 
     for i in range(1, 4, 1):
         b_concat = tf.keras.layers.Concatenate()([b_output, concatenate_encoder_block[-i]])
-
         b_conv = tf.keras.layers.Conv2DTranspose(number_of_filter_decoder[i], kernel, strides = stride[4-i], padding = 'same', kernel_initializer = initializer, use_bias = False)(b_concat)
         b_batch = tfa.layers.InstanceNormalization()(b_conv)
         b_output = tf.keras.layers.Activation('relu')(b_batch)

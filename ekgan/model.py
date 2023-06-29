@@ -6,7 +6,7 @@ from loss import *
 initializer = tf.random_normal_initializer(0., 0.02)
 time_len = 512
 
-def train_step(input_image, target, inference_generator,discriminator,inference_generator_optimizer, discriminator_optimizer, epoch, label_generator, label_generator_optimizer, lambda_, alpha):
+def train_step(input_image, target, inference_generator, discriminator, inference_generator_optimizer, discriminator_optimizer, epoch, label_generator, label_generator_optimizer, lambda_, alpha):
     with tf.GradientTape() as ig_tape, tf.GradientTape() as disc_tape, tf.GradientTape() as lg_tape:
 
         ig_output, ig_lv = inference_generator(input_image, training = True)
