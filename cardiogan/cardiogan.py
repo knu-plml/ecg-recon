@@ -25,7 +25,7 @@ def load_generator():
     norm = 'layer_norm'
     skip_connection = True
 
-    h = inputs = keras.Input(shape=(16, 512, 1))
+    h = inputs = keras.Input(shape = (16, 512, 1))
     connections = []
 
     for k in range(n_downsample):
@@ -89,7 +89,7 @@ def load_frequency_discriminator():
     
     ''' frequency domain discriminator '''
 
-    inp = tf.keras.layers.Input(shape=[128, 128, 12], name = 'input_image')
+    inp = tf.keras.layers.Input(shape = [128, 128, 12], name = 'input_image')
     x = tf.keras.layers.Conv2D(64, (7, 7), strides = 2, kernel_initializer = initializer, padding = 'same', use_bias = False)(inp)
     x = tf.keras.layers.LeakyReLU()(x)
     x = tf.keras.layers.Conv2D(128, (7, 7), strides = 2, kernel_initializer = initializer, padding = 'same', use_bias = False)(x)

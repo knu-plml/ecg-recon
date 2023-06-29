@@ -20,7 +20,7 @@ def load_generator():
     kernel : kernel
     stride : stride
     '''
-    encoder_inputs = keras.Input(shape=(16, 512, 1), name='generated_generator')
+    encoder_inputs = keras.Input(shape = (16, 512, 1), name = 'generated_generator')
 
     number_of_filter_encoder = [64, 128, 256, 512, 1024]
     number_of_filter_decoder = [512, 256, 128, 64, 1]
@@ -82,8 +82,8 @@ def load_discriminator():
     leaky_relu = tf.keras.layers.LeakyReLU()(batchnorm1)
     zero_pad2 = tf.keras.layers.ZeroPadding2D()(leaky_relu)
     last = tf.keras.layers.Conv2D(1, (2, 4), strides = (1), kernel_initializer = initializer, activation = 'sigmoid')(zero_pad2)
-
-    return tf.keras.Model(inputs=[inp], outputs=last)
+ 
+    return tf.keras.Model(inputs = [inp], outputs = last)
 
 
 def train_step(input_image, target, generator, discriminator, generator_optimizer, discriminator_optimizer,

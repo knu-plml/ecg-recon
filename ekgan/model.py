@@ -44,7 +44,7 @@ def load_inference_generator():
     kernel = (2, 4)
     stride = [2, 2, 2, 2, (1, 2)]
 
-    ig_inputs=keras.Input(shape=(16, time_len, 1), name = 'ig')
+    ig_inputs=keras.Input(shape = (16, time_len, 1), name = 'ig')
     h = []
 
     x = tf.keras.layers.Conv2D(filters_encoder[0], kernel, stride[0], padding = 'same', kernel_initializer = initializer, use_bias = False)(ig_inputs)
@@ -80,7 +80,7 @@ def load_label_generator():
     kernel = (2, 4)
     stride = [2, 2, 2, 2, (1, 2)]
 
-    lg_inputs=keras.Input(shape=(16, time_len, 1), name = 'lg')
+    lg_inputs=keras.Input(shape = (16, time_len, 1), name = 'lg')
 
     x = tf.keras.layers.Conv2D(filters_encoder[0], kernel, stride[0], padding = 'same', kernel_initializer = initializer, use_bias = False)(lg_inputs)
     x = tf.keras.layers.Activation('LeakyReLU')(x)
@@ -113,9 +113,10 @@ def load_discriminator():
     kernel = [64, 32, 16, 8, 4]
     stride = [4, 4, 4, 2, 2]
 
-    encoder_inputs = keras.Input(shape=(16, time_len, 1), name = 'dis')
-    target = keras.Input(shape=(16, time_len, 1), name = 'dis_tar') 
+    encoder_inputs = keras.Input(shape = (16, time_len, 1), name = 'dis')
+    target = keras.Input(shape = (16, time_len, 1), name = 'dis_tar') 
     x = tf.keras.layers.Concatenate()([encoder_inputs, target])
+
     h = []
     x = tf.keras.layers.Conv2D(filters_encoder[0], (1, kernel[0]), (1, stride[0]), padding = 'same', kernel_initializer = initializer, use_bias = False)(x)
     x = tf.keras.layers.Activation('LeakyReLU')(x)
@@ -138,6 +139,6 @@ def load_discriminator():
 
     x = tf.keras.layers.Concatenate()([x, h[0]])
     encoder_outputs = layers.Conv2DTranspose(filters_decoder[4], (1, kernel[-5]), (1, stride[-4]), padding = "same", kernel_initializer = initializer, use_bias = False)(x)
-    discriminator = keras.Model(inputs=[encoder_inputs,target],outputs = [encoder_outputs])
+    discriminator = keras.Model(inputs = [encoder_inputs, target],outputs = [encoder_outputs])
     discriminator.summary()
     return discriminator

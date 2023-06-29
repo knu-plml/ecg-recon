@@ -25,7 +25,7 @@ def load_generator():
     stride : stride
     '''
     
-    encoder_inputs = keras.Input(shape=(16, 512, 1), name = 'generator_input')
+    encoder_inputs = keras.Input(shape = (16, 512, 1), name = 'generator_input')
     number_of_filter_encoder = [64, 128, 256, 512, 1024]
     number_of_filter_decoder = [512, 256, 128, 64, 1]
     kernel = (2, 4)
@@ -62,8 +62,8 @@ def load_generator():
 
 def load_discriminator():
 
-    inp = tf.keras.layers.Input(shape=[16, time_len, 1], name = 'input_image')
-    tar = tf.keras.layers.Input(shape=[16, time_len, 1], name = 'target_image')
+    inp = tf.keras.layers.Input(shape = [16, time_len, 1], name = 'input_image')
+    tar = tf.keras.layers.Input(shape = [16, time_len, 1], name = 'target_image')
 
     x = tf.keras.layers.concatenate([inp, tar])
     x = tf.keras.layers.Conv2D(64, (2, 4), strides = (2), kernel_initializer = initializer, padding = 'same', use_bias = False)(x)
