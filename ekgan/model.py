@@ -6,39 +6,20 @@ from loss import *
 initializer = tf.random_normal_initializer(0., 0.02)
 time_len = 512
 
-def train_step(input_image, target, inference_generator, discriminator, inference_generator_optimizer, discriminator_optimizer, epoch, label_generator, label_generator_optimizer, lambda_, alpha):
-    with tf.GradientTape() as ig_tape, tf.GradientTape() as disc_tape, tf.GradientTape() as lg_tape:
-
-        ig_output, ig_lv = inference_generator(input_image, training = True)
-        lg_output, lg_lv = label_generator([input_image], training = True)
-
-        disc_real_output = discriminator([input_image, target], training = True)
-        disc_generated_output = discriminator([input_image, ig_output], training = True)
-
-        total_lg_loss, lg_l1_loss = label_generator_loss(lg_output, input_image)
-
-        total_ig_loss, ig_adversarial_loss, ig_l1_loss, vector_loss  = inference_generator_loss(disc_generated_output, ig_output, target, lambda_, ig_lv, lg_lv, alpha)
-        disc_loss = discriminator_loss(disc_real_output, disc_generated_output)
-
-    inference_generator_gradients = ig_tape.gradient(total_ig_loss,
-                                            inference_generator.trainable_variables)
-    discriminator_gradients = disc_tape.gradient(disc_loss,
-                                                 discriminator.trainable_variables)
-    label_generator_gradients = lg_tape.gradient(total_lg_loss,
-                                                 label_generator.trainable_variables)
-
-    inference_generator_optimizer.apply_gradients(zip(inference_generator_gradients,
-                                            inference_generator.trainable_variables))
-    discriminator_optimizer.apply_gradients(zip(discriminator_gradients,
-                                                discriminator.trainable_variables))
-    label_generator_optimizer.apply_gradients(zip(label_generator_gradients,
-                                                label_generator.trainable_variables))
-
-    print('epoch {} gen_total_loss {} ig_adversarial_loss {} ig_l1_loss {} lg_l2_loss {} vector_loss {}  '.format(epoch, total_ig_loss, ig_adversarial_loss, ig_l1_loss, lg_l1_loss, vector_loss))
-
-
 def load_inference_generator():
+    '''
+    EKGAN inference generator
+    - input shape: (16,512,1), output shape: (16,512,1).
+    - input and output data contain two zero padding rows at the top and bottom
+    - kernel size: (2,4)
 
+    initializer : for each layer, randomly select from (mean = 0, stdev = 0.02)
+    ig_inputs : input of the generator
+    filters_encoder : the number of filters of encoder in the inference generator
+    filters_decoder : the number of filters of decoder in the inference generator
+    kernel : kernel
+    stride : stride
+    '''
     filters_encoder = [64, 128, 256, 512, 1024]
     filters_decoder = [512, 256, 128, 64, 1]
     kernel = (2, 4)
@@ -74,7 +55,20 @@ def load_inference_generator():
 
 
 def load_label_generator():
+    '''
+    EKGAN label generator
+    - almost same as the inference generator, except for concatenation.
+    - input shape: (16,512,1), output shape: (16,512,1).
+    - input and output data contain two zero padding rows at the top and bottom
+    - kernel size: (2,4)
 
+    initializer : for each layer, randomly select from (mean = 0, stdev = 0.02)
+    lg_inputs : input of the generator
+    filters_encoder : the number of filters of encoder in the label generator
+    filters_decoder : the number of filters of decoder in the label generator
+    kernel : kernel
+    stride : stride
+    '''
     filters_encoder = [64, 128, 256, 512, 1024]
     filters_decoder = [512, 256, 128, 64, 1]
     kernel = (2, 4)
@@ -107,7 +101,17 @@ def load_label_generator():
 
 
 def load_discriminator():
+    '''
+    EKGAN discriminator
+    - uses 5 convolution layers (kernel size: (2,4))
 
+    filters_encoder : the number of filters of encoder in the discriminator
+    filters_decoder : the number of filters of decoder in the discriminator
+    kernel : kernel
+    stride : stride
+    encoder_inputs : input of the discriminator (Input of inference generator)
+    target : input of the discriminator (Original or generated image)
+    '''
     filters_encoder = [32, 64, 128, 256, 512]
     filters_decoder = [256, 128, 64, 32, 1]
     kernel = [64, 32, 16, 8, 4]
@@ -142,3 +146,36 @@ def load_discriminator():
     discriminator = keras.Model(inputs = [encoder_inputs, target],outputs = [encoder_outputs])
     discriminator.summary()
     return discriminator
+
+
+def train_step(input_image, target, inference_generator, discriminator, inference_generator_optimizer, discriminator_optimizer, epoch, label_generator, label_generator_optimizer, lambda_, alpha):
+    with tf.GradientTape() as ig_tape, tf.GradientTape() as disc_tape, tf.GradientTape() as lg_tape:
+
+        ig_output, ig_lv = inference_generator(input_image, training = True)
+        lg_output, lg_lv = label_generator([input_image], training = True)
+
+        disc_real_output = discriminator([input_image, target], training = True)
+        disc_generated_output = discriminator([input_image, ig_output], training = True)
+
+        total_lg_loss, lg_l1_loss = label_generator_loss(lg_output, input_image)
+
+        total_ig_loss, ig_adversarial_loss, ig_l1_loss, vector_loss  = inference_generator_loss(disc_generated_output, ig_output, target, lambda_, ig_lv, lg_lv, alpha)
+        disc_loss = discriminator_loss(disc_real_output, disc_generated_output)
+
+    inference_generator_gradients = ig_tape.gradient(total_ig_loss,
+                                            inference_generator.trainable_variables)
+    discriminator_gradients = disc_tape.gradient(disc_loss,
+                                                 discriminator.trainable_variables)
+    label_generator_gradients = lg_tape.gradient(total_lg_loss,
+                                                 label_generator.trainable_variables)
+
+    inference_generator_optimizer.apply_gradients(zip(inference_generator_gradients,
+                                            inference_generator.trainable_variables))
+    discriminator_optimizer.apply_gradients(zip(discriminator_gradients,
+                                                discriminator.trainable_variables))
+    label_generator_optimizer.apply_gradients(zip(label_generator_gradients,
+                                                label_generator.trainable_variables))
+
+    print('epoch {} gen_total_loss {} ig_adversarial_loss {} ig_l1_loss {} lg_l2_loss {} vector_loss {}  '.format(epoch, total_ig_loss, ig_adversarial_loss, ig_l1_loss, lg_l1_loss, vector_loss))
+
+
