@@ -15,8 +15,8 @@ def load_inference_generator():
 
     initializer : for each layer, randomly select from (mean = 0, stdev = 0.02)
     ig_inputs : input of the generator
-    filters_encoder : the number of filters of encoder in the inference generator
-    filters_decoder : the number of filters of decoder in the inference generator
+    filters_encoder : the number of filters of encoder
+    filters_decoder : the number of filters of decoder
     kernel : kernel
     stride : stride
     '''
@@ -64,8 +64,8 @@ def load_label_generator():
 
     initializer : for each layer, randomly select from (mean = 0, stdev = 0.02)
     lg_inputs : input of the generator
-    filters_encoder : the number of filters of encoder in the label generator
-    filters_decoder : the number of filters of decoder in the label generator
+    filters_encoder : the number of filters of encoder
+    filters_decoder : the number of filters of decoder
     kernel : kernel
     stride : stride
     '''
@@ -105,8 +105,8 @@ def load_discriminator():
     EKGAN discriminator
     - uses 5 convolution layers (kernel size: (2,4))
 
-    filters_encoder : the number of filters of encoder in the discriminator
-    filters_decoder : the number of filters of decoder in the discriminator
+    filters_encoder : the number of filters of encoder
+    filters_decoder : the number of filters of decoder
     kernel : kernel
     stride : stride
     encoder_inputs : input of the discriminator (Input of inference generator)
