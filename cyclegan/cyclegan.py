@@ -15,8 +15,8 @@ def load_generator():
 
     initializer : for each layer, randomly select from (mean = 0, stdev = 0.02)
     encoder_inputs : input of the generator
-    number_of_filter_encoder : the number of filters of encoder in the encoder
-    number_of_filter_decoder : the number of filters of decoder in the decoder
+    number_of_filter_encoder : the number of filters of encoder
+    number_of_filter_decoder : the number of filters of decoder
     kernel : kernel
     stride : stride
     '''
