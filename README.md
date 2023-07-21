@@ -1,6 +1,10 @@
 # Twelve-Lead ECG Reconstruction from Single-Lead Signals Using Generative Adversarial Networks
+![Python 3.8](https://img.shields.io/badge/python-3.8-red.svg?style=plastic)
+![TensorFlow 1.10](https://img.shields.io/badge/tensorflow-2.8-orange.svg?style=plastic)
+![Keras 2.8](https://img.shields.io/badge/Keras-2.8-yellow.svg?style=plastic)
+![CUDA 11.7](https://img.shields.io/badge/CUDA-11.7-darkyellow.svg?style=plastic)
+![CUDNN 11.7](https://img.shields.io/badge/CUDNN-8.2.1-blue.svg?style=plastic)
 ### [Paper](!!링크필요) in MICCAI 2023 ('ORAL or Poster')
-
  #### Jinho Joo\*<sup>1</sup>, Gihun Joo\*<sup>1</sup>, Yeji Kim<sup>2</sup>, Moo-Nyun Jin<sup>2</sup>, Junbeom Park\*\*<sup>2</sup>, Hyeonseung Im\*\*<sup>1</sup>  
  #### <sup>1</sup>Kangwon National University, <sup>2</sup>Ewha Womans University Medical Center  
  #### \*denotes equal contribution, \**denotes corresponding authors  
@@ -8,7 +12,7 @@
 <p align="center"><img src='imgs/fig-rbbbaf2-color.png' width="85%" height="85%"></p>
 <p align="center"><img src='imgs/fig-rbbbaf2-color-detail.png' width="85%" height="85%"></p>
 
-## Our goal
+## Our Goal
 We propose a novel generative adversarial network that can faithfully reconstruct 12-lead ECG signals from single-lead signal.
 Our method can reconstruct 12-lead ECG with CVD-related characteristics effectively.
 Thus, our method can be used to bridge commonly available wearable devices that can measure only Lead I and high-performance deep learning-based prediction models using 12-lead ECGs.
