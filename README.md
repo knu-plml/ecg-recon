@@ -13,7 +13,7 @@
 in MICCAI 2023 ('ORAL or Poster')
 
 <p align="center"><img src='imgs/fig-rbbbaf2-color.png' width="85%" height="85%"></p>
-<p align="center"><img src='imgs/fig-rbbbaf2-color-detail.png' width="85%" height="85%"></p>>
+<p align="center"><img src='imgs/fig-rbbbaf2-color-detail.png' width="85%" height="85%"></p>
 
 ## Our goal
 We propose a novel generative adversarial network that can faithfully reconstruct 12-lead ECG signals from single-lead signal.  
