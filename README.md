@@ -16,15 +16,15 @@ in MICCAI 2023 ('ORAL or Poster')
 <p align="center"><img src='imgs/fig-rbbbaf2-color-detail.png' width="85%" height="85%"></p>>
 
 ## Our goal
-we propose a novel generative adversarial network  that can faithfully reconstruct 12-lead ECG signals from single-lead signal.
-our method's ability to effectively reconstruct CVD-related characteristics by evaluating reconstructed ECGs with a highly accurate 12-lead ECG-based prediction model and three cardiologists
+We propose a novel generative adversarial network that can faithfully reconstruct 12-lead ECG signals from single-lead signal.  
+Our method can reconstruct 12-lead ECG with CVD-related characteristics effectively.
 
 ## EKGAN
 
 
-<img src='imgs/fig-ekgan-new.png'/>"
+<p align="center"><img src='imgs/fig-ekgan-new.png' width="85%" height="85%"></p>>
 
 ## Others
-pix2pix, CardioGAN, CycleGAN
+[Pix2pix](https://arxiv.org/pdf/1611.07004.pdf), [CycleGAN](https://arxiv.org/pdf/1703.10593.pdf), [CardioGAN](https://arxiv.org/pdf/2010.00104.pdf)
 
 
