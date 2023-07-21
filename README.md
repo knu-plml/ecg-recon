@@ -1,11 +1,9 @@
 # Twelve-Lead ECG Reconstruction from Single-Lead Signals Using Generative Adversarial Networks
-### [Paper](!!링크필요)
+### [Paper](!!링크필요) in MICCAI 2023 ('ORAL or Poster')
 
  #### Jinho Joo\*<sup>1</sup>, Gihun Joo\*<sup>1</sup>, Yeji Kim<sup>2</sup>, Moo-Nyun Jin<sup>2</sup>, Junbeom Park\*\*<sup>2</sup>, Hyeonseung Im\*\*<sup>1</sup>  
  #### <sup>1</sup>Kangwon National University, <sup>2</sup>Ewha Womans University Medical Center  
- #### \*denotes equal contribution,
- #### \**denotes corresponding authors  
-#### in MICCAI 2023 ('ORAL or Poster')
+ #### \*denotes equal contribution, \**denotes corresponding authors  
 
 <p align="center"><img src='imgs/fig-rbbbaf2-color.png' width="85%" height="85%"></p>
 <p align="center"><img src='imgs/fig-rbbbaf2-color-detail.png' width="85%" height="85%"></p>
