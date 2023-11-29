@@ -25,7 +25,13 @@ We implemented not only EKGAN but also [Pix2pix](https://arxiv.org/pdf/1611.0700
 
 ## Citation
 ```
-@inproceedings{
+@inproceedings{joo2023twelve,
+  title={Twelve-Lead ECG Reconstruction from Single-Lead Signals Using Generative Adversarial Networks},
+  author={Joo, Jinho and Joo, Gihun and Kim, Yeji and Jin, Moo-Nyun and Park, Junbeom and Im, Hyeonseung},
+  booktitle={International Conference on Medical Image Computing and Computer-Assisted Intervention},
+  pages={184--194},
+  year={2023},
+  organization={Springer}
 }
 ```
 
